@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --color-bg: #FAF9F6;
+    --color-text: #000000;
+    --color-primary: #25D366;
+    --color-accent: #FF7A00;
+    --border-width: 4px;
+    --border-radius: 20px;
+    --shadow: 4px 4px 0px #000000;
+    --shadow-hover: 8px 8px 0px #000000;
+  }
+
+  body {
+    @apply bg-[#FAF9F6] text-black;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    @apply font-bold;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="tel"],
+  textarea,
+  select {
+    @apply w-full px-4 py-3 border-[4px] border-black bg-white font-medium rounded-[20px];
+    @apply focus:outline-none focus:ring-0;
+    @apply transition-all duration-150;
+    font-family: 'Inter', sans-serif;
+  }
+
+  button {
+    @apply font-bold transition-all duration-150;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+.neo-card {
+  @apply bg-white border-[4px] border-black rounded-[20px];
+  box-shadow: 4px 4px 0px #000000;
+  @apply transition-all duration-150;
+}
+
+.neo-card:hover {
+  @apply translate-x-[-2px] translate-y-[-2px];
+  box-shadow: 8px 8px 0px #000000;
+}
+
+.neo-card-lg {
+  @apply bg-white border-[4px] border-black rounded-[20px];
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.neo-btn {
+  @apply px-6 py-3 bg-[#25D366] text-black border-[4px] border-black font-bold uppercase tracking-wider rounded-[20px];
+  box-shadow: 4px 4px 0px #000000;
+  @apply hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000000];
+  @apply active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  @apply transition-all duration-150;
+}
+
+.neo-btn-secondary {
+  @apply px-6 py-3 bg-white text-black border-[4px] border-black font-bold uppercase tracking-wider rounded-[20px];
+  box-shadow: 4px 4px 0px #000000;
+  @apply hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000000];
+  @apply active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  @apply transition-all duration-150;
+}
+
+.neo-btn-accent {
+  @apply px-6 py-3 bg-[#FF7A00] text-black border-[4px] border-black font-bold uppercase tracking-wider rounded-[20px];
+  box-shadow: 4px 4px 0px #000000;
+  @apply hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000000];
+  @apply active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+  @apply transition-all duration-150;
+}
+
+/* Wiggle animation for CTA */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+/* Sparkle animation */
+@keyframes sparkle {
+  0% { 
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
+  100% { 
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+.sparkle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #FF7A00;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF9F6;
+  border: 2px solid #000;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #25D366;
+  border: 2px solid #000;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF7A00;
+}
