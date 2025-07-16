@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { store } from '@/lib/store'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,13 +10,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Phone number and name required' }, { status: 400 })
   }
 
-  // Create or get user
-  let user = store.getUser(phoneNumber)
-  if (!user) {
-    user = store.createUser(phoneNumber, name)
-  }
-  
-  // Set a cookie with the user session
+  // Store user data in cookies
   const cookieStore = await cookies()
   cookieStore.set('userPhone', phoneNumber, {
     httpOnly: true,
@@ -25,6 +18,13 @@ export async function POST(request: Request) {
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7, // 1 week
   })
+  
+  cookieStore.set('userName', name, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+  })
 
-  return NextResponse.json({ success: true, user })
+  return NextResponse.json({ success: true, user: { phoneNumber, name } })
 }

@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { store } from '@/lib/store'
 
 export async function GET() {
   const cookieStore = cookies()
   const userPhone = cookieStore.get('userPhone')
+  const userName = cookieStore.get('userName')
 
-  if (!userPhone) {
+  if (!userPhone || !userName) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
-  const user = store.getUser(userPhone.value)
-  if (!user) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 })
+  const user = {
+    phoneNumber: userPhone.value,
+    name: userName.value
   }
 
-  const groups = store.getGroupsForUser(userPhone.value)
+  // For now, return empty groups array
+  // In a real app, this would fetch from a database
+  const groups: any[] = []
 
   return NextResponse.json({ user, groups })
 }

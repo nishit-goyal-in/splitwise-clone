@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { store } from '@/lib/store'
+
+// Simple in-memory storage for demo
+const groupsData = new Map<string, any>()
+const userGroups = new Map<string, string[]>()
 
 export async function POST(request: Request) {
   const cookieStore = cookies()
   const userPhone = cookieStore.get('userPhone')
+  const userName = cookieStore.get('userName')
 
   if (!userPhone) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
@@ -16,17 +20,42 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Name and members required' }, { status: 400 })
   }
 
-  // Get all member users (create if they don't exist)
-  const members = memberPhones.map((phone: string) => {
-    let user = store.getUser(phone)
-    if (!user) {
-      // Create placeholder user with phone number as name
-      user = store.createUser(phone, phone)
-    }
-    return user
+  // Create members array
+  const members = memberPhones.map((phone: string) => ({
+    phoneNumber: phone,
+    name: phone === userPhone.value ? userName?.value : phone
+  }))
+
+  const group = {
+    id: Date.now().toString(),
+    name,
+    members,
+    createdBy: userPhone.value,
+    createdAt: new Date().toISOString()
+  }
+
+  // Store group
+  groupsData.set(group.id, group)
+
+  // Store user-group associations
+  memberPhones.forEach((phone: string) => {
+    const currentGroups = userGroups.get(phone) || []
+    userGroups.set(phone, [...currentGroups, group.id])
   })
 
-  const group = store.createGroup(name, userPhone.value, members)
-
   return NextResponse.json({ success: true, group })
+}
+
+export async function GET() {
+  const cookieStore = cookies()
+  const userPhone = cookieStore.get('userPhone')
+
+  if (!userPhone) {
+    return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  }
+
+  const userGroupIds = userGroups.get(userPhone.value) || []
+  const groups = userGroupIds.map(id => groupsData.get(id)).filter(Boolean)
+
+  return NextResponse.json({ groups })
 }

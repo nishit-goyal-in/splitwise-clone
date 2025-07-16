@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { store } from '@/lib/store'
+
+// Simple in-memory storage for demo
+const expensesData = new Map<string, any[]>()
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -10,7 +12,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Group ID required' }, { status: 400 })
   }
 
-  const expenses = store.getExpensesForGroup(groupId)
+  const expenses = expensesData.get(groupId) || []
   return NextResponse.json({ expenses })
 }
 
@@ -28,10 +30,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  const newExpense = store.addExpense({
+  const newExpense = {
     ...expense,
+    id: Date.now().toString(),
     date: new Date().toISOString()
-  })
+  }
+
+  // Store expense
+  const groupExpenses = expensesData.get(expense.groupId) || []
+  expensesData.set(expense.groupId, [...groupExpenses, newExpense])
 
   return NextResponse.json({ success: true, expense: newExpense })
 }
