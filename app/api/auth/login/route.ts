@@ -18,8 +18,7 @@ export async function POST(request: Request) {
   }
   
   // Set a cookie with the user session
-  const cookieStore = cookies()
-  cookieStore.set('userPhone', phoneNumber, {
+  cookies().set('userPhone', phoneNumber, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
